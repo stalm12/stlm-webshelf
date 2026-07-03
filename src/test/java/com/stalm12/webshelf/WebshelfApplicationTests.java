@@ -45,4 +45,39 @@ class WebshelfApplicationTests {
         assertThat(links).hasSize(2);
         assertThat(links).extracting(WebLink::getTitle).containsExactlyInAnyOrder("Example", "GitHub");
     }
+
+    @Test
+    void canDeleteLink() {
+        AppUser user = new AppUser();
+        user.setUsername("deleteuser");
+        user.setPasswordHash(passwordEncoder.encode("secret"));
+        userRepository.save(user);
+
+        WebLink link = webLinkService.addLink("deleteuser", "ToDelete", "https://delete.me");
+        assertThat(webLinkService.getLinksForUser("deleteuser")).hasSize(1);
+
+        webLinkService.deleteLink(link.getId(), "deleteuser");
+        assertThat(webLinkService.getLinksForUser("deleteuser")).isEmpty();
+    }
+
+    @Test
+    void deleteLinkByOtherUserIsRejected() {
+        AppUser owner = new AppUser();
+        owner.setUsername("owner");
+        owner.setPasswordHash(passwordEncoder.encode("secret"));
+        userRepository.save(owner);
+
+        AppUser other = new AppUser();
+        other.setUsername("other");
+        other.setPasswordHash(passwordEncoder.encode("secret"));
+        userRepository.save(other);
+
+        WebLink link = webLinkService.addLink("owner", "Private", "https://private.com");
+
+        org.junit.jupiter.api.Assertions.assertThrows(
+                SecurityException.class,
+                () -> webLinkService.deleteLink(link.getId(), "other")
+        );
+        assertThat(webLinkService.getLinksForUser("owner")).hasSize(1);
+    }
 }

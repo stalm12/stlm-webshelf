@@ -216,8 +216,18 @@ public class ShelfView extends VerticalLayout {
         Button deleteBtn = new Button("Delete");
         deleteBtn.addThemeVariants(ButtonVariant.LUMO_SMALL, ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
         deleteBtn.addClickListener(e -> {
-            webLinkService.deleteLink(link.getId());
-            refreshLinks();
+            Dialog confirm = new Dialog();
+            confirm.setHeaderTitle("Delete Link");
+            confirm.add(new Paragraph("Are you sure you want to delete \"" + link.getTitle() + "\"?"));
+            Button yes = new Button("Delete", ev -> {
+                webLinkService.deleteLink(link.getId(), getCurrentUsername());
+                confirm.close();
+                refreshLinks();
+            });
+            yes.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+            Button no = new Button("Cancel", ev -> confirm.close());
+            confirm.getFooter().add(no, yes);
+            confirm.open();
         });
 
         actions.add(openBtn, deleteBtn);

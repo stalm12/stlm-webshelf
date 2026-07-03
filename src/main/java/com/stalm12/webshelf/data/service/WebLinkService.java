@@ -43,7 +43,12 @@ public class WebLinkService {
         return webLinkRepository.save(link);
     }
 
-    public void deleteLink(Long id) {
+    public void deleteLink(Long id, String username) {
+        WebLink link = webLinkRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Link not found: " + id));
+        if (!link.getUser().getUsername().equals(username)) {
+            throw new SecurityException("Not authorized to delete this link");
+        }
         webLinkRepository.deleteById(id);
     }
 }
