@@ -1,0 +1,28 @@
+# Maven build output
+target/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.eclipse
+.classpath
+.project
+.settings/
+
+# Vaadin generated frontend
+frontend/generated/
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
