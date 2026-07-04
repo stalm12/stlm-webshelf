@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - /opt/data/stlm-webshelf/postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U webshelf"]
       interval: 5s
@@ -21,15 +21,18 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
+    volumes:
+      - /opt/data/stlm-webshelf/uploads:/app/uploads
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_NAME: webshelf
       DB_USER: webshelf
       DB_PASSWORD: webshelf
+      APP_FILE_STORAGE_PATH: /app/uploads
+      # Generate a secure encryption key: openssl rand -base64 32
+      # Set APP_ENCRYPTION_KEY for persistent encryption across restarts
+      APP_ENCRYPTION_KEY: create-secure-random-key-here
     depends_on:
       postgres:
         condition: service_healthy
-
-volumes:
-  postgres_data:

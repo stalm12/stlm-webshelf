@@ -6,6 +6,7 @@ The webshelf is a simple one page-app, that allows the user to dynamicly add sim
 - links
 - code snippets
 - text snippets
+- clipboard
 - contacts
 - small file
 - credentials
@@ -41,8 +42,20 @@ You can add small unformatted snippets. The provided 'Copy to Clipboard' Button 
 ### Text-snippets
 You can add text-snippets containing formatted text.
 
+### Clipboard
+You can add code or text snippets to your clipboard shelf. Each snippet includes a 'Copy to Clipboard' button for easy access.
+
+### Secrets & Credentials
+Store sensitive information securely:
+- API keys, tokens, passwords, and other secrets are encrypted at rest in the database.
+- Values are displayed as masked (••••••••) in the UI for security.
+- **Copy** button copies the decrypted value directly to your clipboard without displaying it.
+- **Reveal** button temporarily shows the full value in a dialog.
+- Encryption uses AES-256 with a master key managed by the application.
+
 ### Contacts
 Contacts with email and phone-number.
 
 ### Files
 Important files.
+Upload small files to your shelf and download them later from the file list.
